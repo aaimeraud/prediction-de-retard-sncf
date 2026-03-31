@@ -4,24 +4,58 @@
 Projet visant à anticiper les retards des trains à court terme en exploitant les données ouvertes de la SNCF (horaires GTFS statiques et flux temps réel GTFS-RT/SIRI) combinées à des modèles de machine learning modernes.
 
 ## Infrastructure
-- **Image Docker:** TensorFlow 2.x GPU + Colab runtime compatible.
-- **Python:** 3.10+
+
+- **Docker Compose (Standard 2026) :** TensorFlow 2.x (Multi-arch) + Colab runtime.
+- **Python :** 3.10+
+- **Sécurité :** Utilisateur non-root (UID/GID mapping pour Mac Silicon).
+
+## Docker Quickstart
+
+Pour garantir la sécurité et la portabilité, utilisez l'environnement conteneurisé.
+
+### Mac, Linux et WSL
+
+```bash
+# Exportation des identifiants (Auto-détection)
+export UID=$(id -u)
+export GID=$(id -g)
+
+# Lancement
+docker compose up -d --build
+```
+
+### Windows (PowerShell)
+
+```powershell
+# Définition des variables d'environnement
+$env:UID = 1000
+$env:GID = 1000
+
+# Lancement
+docker compose up -d --build
+```
+
+Services disponibles :
+- **Jupyter Lab :** [http://localhost:8888](http://localhost:8888)
+- **API FastAPI :** [http://localhost:5000](http://localhost:5000)
+- **Dashboard Streamlit :** [http://localhost:8501](http://localhost:8501)
 
 ## Protocol Git (Worktrees)
-L'utilisation de `git worktree` est **obligatoire** pour développer de nouvelles fonctionnalités afin de maintenir notre environnement propre et isolé.
 
-### Workflow pour une nouvelle feature:
-1. Création du worktree et de la branche:
+Étant donné le clone du dépôt en mode `--bare`, l'utilisation de `git worktree` est **obligatoire** au sein du répertoire `./worktrees/` :
+
+### Workflow type pour un nouveau développement :
+
+1. Création du worktree (depuis le dossier racine du projet) :
    ```bash
-   git worktree add ../feature-<nom> -b feat/<nom>
-   cd ../feature-<nom>
+   git worktree add ./worktrees/<nom-branche> <nom-branche>
+   cd ./worktrees/<nom-branche>
    ```
-2. Développement
+2. Développement et tests Docker
 3. Commit et Push
-4. Nettoyage et retour au dossier principal:
+4. Nettoyage :
    ```bash
-   cd ../main
-   git worktree remove ../feature-<nom>
+   git worktree remove ./worktrees/<nom-branche>
    ```
 
 ## Accès Colab
