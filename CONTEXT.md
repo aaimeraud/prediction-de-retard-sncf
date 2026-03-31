@@ -1,15 +1,79 @@
 # Contexte du Projet: Prédiction Retards SNCF Temps-Réel
 
 ## État actuel global
-- **Infrastructure initialisée:** (Dockerfile TF+Colab, arborescence, guidelines, config Git).
-- **Architecture ML cible:** TF 2.x pour classification/régression des retards court terme sur un MVP concentré en IDF ou axe unique.
+
+- **Infrastructure initialisée:** Dockerfile TF+Colab, arborescence, guidelines, config Git.
+- **Architecture ML cible:** TF 2.x pour classification/régression retards court terme MVP IDF.
 - **Données sources:** GTFS statique, GTFS-RT/SIRI flux temps réel.
 
-## Constraints & Règles (Rappel QA/Engineer)
-- **Zero-Inline Comments:** Strictement docstrings `""" doc """`.
-- **Git workflow:** Tous les dev sur worktrees séparés.
+## Features Complétées (Session: 31 mars 2026)
 
-## Événements Récents
-- Projet YAML lu et interprété.
-- Arborescence scafoldée par Agent 1 (Infra-Architect).
-- Initialisation des docs et des directives.
+### Feature 1: Data Loader (feat/data-loader) - ✅ MERGED
+
+- **Module:** src/data_loader.py - GTFSDataLoader class
+- **Responsabilités:**
+  - Télécharge les archives GTFS depuis l'API SNCF open data
+  - Parse les fichiers ZIP et charge les CSV
+  - Support tables: stops, routes, trips, stop_times, calendar
+  - Cachage local pour éviter re-téléchargement
+- **Tests:** 8 tests unitaires (100% passing)
+- **Docstrings:** Complet, zéro commentaires inline
+- **Colab-ready:** DataFrames pandas standards
+
+### Feature 2: Data Validation (feat/data-validation) - ✅ MERGED
+
+- **Module:** src/data_validator.py - GTFSValidator class
+- **Responsabilités:**
+  - ValidationResult dataclass pour résultats structurés
+  - Checks: tables requises, schémas, missing values, bounds géographiques, intégrité référentielle
+  - Strict mode pour traiter warnings as errors
+  - Statistiques GTFS (rows, colonnes, mémoire)
+- **Tests:** 13 tests unitaires (100% passing)
+- **Docstrings:** Complet, zéro commentaires inline
+- **Colab-ready:** Retourne rapports texte et DataFrames
+
+### Feature 3: Feature Engineering (feat/feature-engineering) - ✅ MERGED
+
+- **Module:** src/feature_engineer.py - FeatureEngineer class
+- **Responsabilités:**
+  - FeatureSet dataclass pour stockage structuré
+  - Temporal features: hour_of_day, is_peak_hours, service_id
+  - Geographic features: stop_lat, stop_lon, is_ile_de_france
+  - Route features: route_short_name, route_type (one-hot encoded)
+  - Delay history: route_avg_delay, route_delay_volatility
+  - Feature importance baseline estimation
+- **Tests:** 12 tests unitaires (100% passing)
+- **Docstrings:** Complet, zéro commentaires inline
+- **Colab-ready:** Intégration seamless avec data_loader et validator
+
+## Constraints & Règles (Rappel QA/Engineer)
+
+- **Zero-Inline Comments:** Strictement docstrings `""" doc """`.
+- **Git workflow:** Tous dev sur worktrees séparés.
+- **Python CLI:** Exclusivement python3 et pip3.
+- **Test Coverage:** Pytest pour tous modules, min 80% passing.
+- **Docstrings:** Tous public methods/classes + parameters + returns.
+
+## Pipeline Data actuel
+
+```
+GTFS ZIP (remote)
+  → GTFSDataLoader.download_gtfs() [cache local]
+  → GTFSDataLoader.parse_gtfs_zip() [5 DataFrames]
+  → GTFSValidator.validate_gtfs_data() [ValidationResult]
+  → FeatureEngineer.engineer_features() [FeatureSet with ~15 features]
+```
+
+## Commits Importants
+
+- d3c3589: feat/data-loader (354 insertions, 8 tests)
+- 603fa78: feat/data-validation (543 insertions, 13 tests)
+- 59edbf5: feat/feature-engineering (491 insertions, 12 tests)
+
+## Prochaines Étapes (To-do)
+
+1. **Feature 4: Classification Model** - TF 2.x avec Keras
+2. **Feature 5: FastAPI endpoint** - /predict route pour inférence
+3. **Feature 6: QA & Context** - MCP SDK, CONTEXT.md updates
+4. **Feature 7: WebUI** - Colab notebook ou Streamlit dashboard
+5. **Testing:** Integration tests end-to-end simulant Colab env
