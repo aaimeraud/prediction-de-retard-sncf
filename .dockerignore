@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+data/
+.git/
+.gitignore
+.dockerignore
+compose.yaml
+Dockerfile
+tests/.pytest_cache/
