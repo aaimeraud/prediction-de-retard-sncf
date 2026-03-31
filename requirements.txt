@@ -1,0 +1,9 @@
+numpy
+pandas
+scikit-learn
+mcp
+mcp[cli]
+fastapi
+uvicorn
+pytest
+jupyterlab

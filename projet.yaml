@@ -1,0 +1,37 @@
+projet:
+  titre: "Prédiction de retard ferroviaire en temps réel"
+  description: |
+    Notre projet vise à anticiper les retards des trains à court terme en exploitant les données ouvertes de la SNCF (horaires GTFS statiques et flux temps réel GTFS-RT/SIRI) combinées à des modèles de machine learning modernes.
+
+    Deux approches ML complémentaires : une classification pour détecter si un train sera en retard de plus de 5 ou 10 minutes, et une régression pour estimer le nombre de minutes de retard. Les features utilisées incluent le type de train, l'heure, la gare d'origine et de destination, l'historique de retard par axe, et l'état temps réel (retard courant, perturbations actives).
+
+    Le livrable cible est une API "probabilité de retard" couplée à une interface utilisateur affichant le niveau de confiance et des alternatives de trajet.
+
+    Pour limiter les risques techniques (parsing GTFS-RT, volumétrie, ingénierie temps réel), le MVP sera cadré sur une zone géographique (Île-de-France), un opérateur et un horizon temporel précis, afin de valider l'ensemble de la chaîne end-to-end avant toute extension.
+  reformulation-du-projet: |
+    1) Prédiction de retard court-terme avec données horaires temps réel (GTFS/GTFS-RT)
+
+    C’est le plus “innovation ouverte + ML moderne + impact usager” et le plus proche d’un produit réel.
+
+    Datasets SNCF : Horaires SNCF (GTFS + temps réel GTFS-RT / SIRI)
+
+    ML : classification (« retard > 5/10 min ») + régression (minutes de retard)
+
+    Features : type train, heure, gare origine/destination, historique de retard par axe, état temps réel (retard courant, perturbations)
+
+    Produit : API « probabilité de retard » + UI « confiance / alternatives »
+
+    Risques : parsing GTFS-RT, volumétrie, ingénierie temps réel → à cadrer en MVP (ex : une zone / un opérateur / un horizon H).
+datasets:
+  lien-open-data: https://data.sncf.com/explore/dataset/horaires-sncf/information/
+  chemin-data-local: data/horaires-sncf.json
+  api: https://data.sncf.com/api/explore/v2.1/catalog/datasets/horaires-sncf/records?limit=20
+working-directory: |
+  tu travailles dans un worktree git donc l'arborescence du projet est la suivante :
+  .
+  └── main
+      ├── data
+      │   └── horaires-sncf.json
+      └── projet.yaml
+
+  lorsque tu effectue des commandes tu ne dois pas citer tout le chemin complet mais seulement le chemin relatif à partir du dossier main par exemple si tu veux créer un fichier dans le dossier data tu dois faire : touch data/horaires-sncf.json et non pas touch main/data/horaires-sncf.json
