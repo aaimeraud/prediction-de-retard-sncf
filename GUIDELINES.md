@@ -8,11 +8,17 @@
 
 ## 2. Déploiement Git et Worktrees
 
-- Ne travaillez jamais sur la branche principale pour le developpement de features.
-- Utilisez systématiquement la méthode **Git Worktrees**:
-  ```bash
-  git worktree add ../feature-<nom> -b feat/<nom>
-  ```
+- Ne travaillez jamais sur la branche principale pour le developpement.
+- Utilisez systématiquement la méthode **Git Worktrees** au sein du répertoire racine :
+  - **Dossier de destination :** `./worktrees/`
+- **Conventions de nommage des branches :**
+  - Feature : `feat/<nom>`
+  - Hotfix : `hotfix/<nom>`
+  - Documentation : `docs/<nom>`
+  - Infrastructure : `infra/<nom>`
+  - Refactoring : `refactor/<nom>`
+  - Maintenance : `chore/<nom>`
+- **Commande type :** `git worktree add ./worktrees/<nom-branche> <nom-branche>`
 - Cela permet un isolement robuste des environnements et de l'implémentation.
 
 ## 3. Python & Dépendances
