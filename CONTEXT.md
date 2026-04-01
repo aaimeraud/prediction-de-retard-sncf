@@ -11,7 +11,7 @@
 - **Conventions Git :** Prefixes `feat/`, `hotfix/`, `docs/`, `infra/`, `chore/`, `refactor/`.
 - **Données sources:** GTFS statique, GTFS-RT/SIRI flux temps réel.
 
-## Features Complétées (Session: 31 mars 2026)
+## Features Complétées (Session: 31 mars - 1 avril 2026)
 
 ### Feature 1: Data Loader (feat/data-loader) - ✅ MERGED
 
@@ -51,6 +51,25 @@
 - **Docstrings:** Complet, zéro commentaires inline
 - **Colab-ready:** Intégration seamless avec data_loader et validator
 
+### Feature 4: Classification Model (feat/classification-model) - ✅ IN PROGRESS
+
+- **Module:** src/model_classifier.py - DelayClassifier class
+- **Responsabilités:**
+  - Binary classification: Delay > 5 min vs <= 5 min
+  - Architecture: Dense(128) + BatchNorm + Dropout(0.3) → Dense(64) + BatchNorm + Dropout(0.3) → Dense(1, Sigmoid)
+  - Normalization: Z-score (mean=0, std=1) avec persistence des stats
+  - Training: Adam optimizer, binary crossentropy, early stopping
+  - Evaluation: Accuracy, Precision, Recall, F1-score, AUC-ROC, Confusion Matrix
+  - Persistence: Save/load model (.keras + metadata JSON)
+- **Data Containers:** TrainingHistory, EvaluationMetrics (dataclasses)
+- **Tests:** 23 tests unitaires (100% passing)
+  - Initialization, normalization, training, prediction
+  - Evaluation metrics, save/load consistency
+  - Full pipeline integration tests
+- **Docstrings:** Complet, zéro commentaires inline
+- **Colab-ready:** TensorFlow 2.x, numpy/pandas standard imports
+- **Commit:** 85a2eef
+
 ## Constraints & Règles (Rappel QA/Engineer)
 
 - **Zero-Inline Comments:** Strictement docstrings `""" doc """`.
@@ -59,7 +78,7 @@
 - **Test Coverage:** Pytest pour tous modules, min 80% passing.
 - **Docstrings:** Tous public methods/classes + parameters + returns.
 
-## Pipeline Data actuel
+## Pipeline Data & ML actuel
 
 ```
 GTFS ZIP (remote)
@@ -67,6 +86,9 @@ GTFS ZIP (remote)
   → GTFSDataLoader.parse_gtfs_zip() [5 DataFrames]
   → GTFSValidator.validate_gtfs_data() [ValidationResult]
   → FeatureEngineer.engineer_features() [FeatureSet with ~15 features]
+  → DelayClassifier.normalize_features() [z-score normalized]
+  → DelayClassifier.train() [Binary classification model]
+  → DelayClassifier.predict() [Delay prediction: 0 or 1]
 ```
 
 ## Commits Importants
@@ -74,11 +96,12 @@ GTFS ZIP (remote)
 - d3c3589: feat/data-loader (354 insertions, 8 tests)
 - 603fa78: feat/data-validation (543 insertions, 13 tests)
 - 59edbf5: feat/feature-engineering (491 insertions, 12 tests)
+- 85a2eef: feat/classification-model (520 insertions, 23 tests)
 
 ## Prochaines Étapes (To-do)
 
-1. **Feature 4: Classification Model** - TF 2.x avec Keras
-2. **Feature 5: FastAPI endpoint** - /predict route pour inférence
-3. **Feature 6: QA & Context** - MCP SDK, CONTEXT.md updates
+1. ✅ **Feature 4: Classification Model** - COMPLETED (Phase 1)
+2. **Feature 5: FastAPI endpoint** - /predict route pour inférence (Phase 2)
+3. **Feature 6: QA & Context** - MCP SDK, CONTEXT.md updates (Phase 3)
 4. **Feature 7: WebUI** - Colab notebook ou Streamlit dashboard
 5. **Testing:** Integration tests end-to-end simulant Colab env

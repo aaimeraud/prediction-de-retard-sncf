@@ -27,17 +27,25 @@
   - [x] Route features (type, nom court)
   - [x] Tests unitaires: 12 tests passing
   - [x] Commit: 59edbf5
+- [x] **Feature 4: Classification Model (feat/classification-model) - Phase 1**
+  - [x] DelayClassifier class (TensorFlow/Keras)
+  - [x] Architecture: Dense + BatchNorm + Dropout (binary classification)
+  - [x] Training: Early stopping, validation split, z-score normalization
+  - [x] Evaluation: Accuracy, Precision, Recall, F1-score, AUC-ROC
+  - [x] Persistence: Save/load model avec metadata
+  - [x] Tests unitaires: 23 tests passing (100%)
+  - [x] Quality: 100% docstrings, zéro commentaires inline
+  - [x] Commit: 85a2eef
 
 ## En cours
 
-- [ ] Review et merge des 3 features dans develop
-- [ ] Communication des résultats au client
+- [ ] Merge feat/classification-model vers develop
+- [ ] Communication des résultats et validation client
 
 ## To-do
 
-- [ ] Feature 4: Classification Model (retard > 5min) avec TensorFlow
-- [ ] Feature 5: APIs FastAPI pour prédictions
-- [ ] Feature 6: WebUI pour visualisation
+- [ ] Feature 5: FastAPI APIs pour prédictions (Phase 2)
+- [ ] Feature 6: WebUI pour visualisation (Streamlit/Colab)
 - [ ] Integration MCP SDK Python pour persistance de contexte
 - [ ] Deployment sur Colab
 - [ ] Tests d'acceptation end-to-end
