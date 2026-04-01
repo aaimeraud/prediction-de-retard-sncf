@@ -8,18 +8,45 @@
 
 ## 2. Déploiement Git et Worktrees
 
-- Ne travaillez jamais sur la branche principale pour le developpement.
-- Utilisez systématiquement la méthode **Git Worktrees** au sein du répertoire racine :
-  - **Dossier de destination :** `./worktrees/`
-- **Conventions de nommage des branches :**
-  - Feature : `feat/<nom>`
-  - Hotfix : `hotfix/<nom>`
-  - Documentation : `docs/<nom>`
-  - Infrastructure : `infra/<nom>`
-  - Refactoring : `refactor/<nom>`
-  - Maintenance : `chore/<nom>`
-- **Commande type :** `git worktree add ./worktrees/<nom-branche> <nom-branche>`
+### 2.1 Conventions de Nommage
+- **Feature :** `feat/<nom>`
+- **Hotfix :** `hotfix/<nom>`
+- **Documentation :** `docs/<nom>`
+- **Infrastructure :** `infra/<nom>`
+- **Refactoring :** `refactor/<nom>`
+- **Maintenance :** `chore/<nom>`
+
+### 2.2 Workflow Explicite : Branche → Worktree
+**Toujours créer la branche AVANT le worktree (protocole strict) :**
+
+```bash
+cd /path/to/repository.git
+
+git branch feat/my-feature develop
+git worktree add ./worktrees/feat-my-feature feat/my-feature
+cd ./worktrees/feat-my-feature
+```
+
+**Pourquoi deux étapes ?**
+- Branche explicite : visible dans `git branch -a`
+- Worktree isolé : développement independant, pas de conflicts
+- Traçabilité : historique Git conserve les branches créées
+
+### 2.3 Isolation et Environnement
+- Ne travaillez **jamais** sur `develop` ou `main` directement
+- Chaque feature = 1 branche + 1 worktree = 1 environnement isolé
+- **Dossier de destination worktrees :** `./worktrees/`
 - Cela permet un isolement robuste des environnements et de l'implémentation.
+
+### 2.4 Merge et Cleanup
+Après merge vers `develop` :
+
+```bash
+cd /path/to/repository.git
+git worktree remove ./worktrees/feat-my-feature
+```
+
+La branche persiste (pour historique git), le worktree est supprimé (nettoyage).
 
 ## 3. Python & Dépendances
 
