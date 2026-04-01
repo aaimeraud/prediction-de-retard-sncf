@@ -2,7 +2,7 @@
 
 ## État actuel global
 
-- **Infrastructure initialisée :** 
+- **Infrastructure initialisée :**
   - Docker Compose (Standard 2026, `compose.yaml`).
   - Image Multi-arch TF 2.x (M1/M2/M3 compatible).
   - Sécurité : UID/GID mapping, utilisateur `developer` non-privilégié.
