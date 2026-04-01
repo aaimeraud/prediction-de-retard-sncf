@@ -36,21 +36,30 @@
   - [x] Tests unitaires: 23 tests passing (100%)
   - [x] Quality: 100% docstrings, zéro commentaires inline
   - [x] Merge vers develop: c7a9964
+- [x] **Feature 5: FastAPI Inference API (feat/fastapi-endpoint) - Phase 2**
+  - [x] PredictionAPI class wrapping classification model
+  - [x] POST /predict: Single prediction avec validation
+  - [x] POST /predict/batch: Batch predictions (1-1000 items)
+  - [x] GET /health & GET /model/info endpoints
+  - [x] Pydantic models: Request & Response validation
+  - [x] Delay categorization: LOW/MEDIUM/HIGH avec confidence
+  - [x] Error handling: 422 Validation, 503 Model not loaded, 500 Server
+  - [x] Tests unitaires: 21 tests passing (100%)
+  - [x] Quality: 100% docstrings, zéro commentaires inline
+  - [x] CORS middleware et Auto Swagger UI
+  - [x] Merge vers develop: d27e76e
 
 ## En cours
 
 - [x] Merge feat/classification-model vers develop - COMPLETE
-- [ ] Validation all tests passing (56/56 ✅)
-- [ ] Tag release v0.2 (Features 1-4 complete)
-- [ ] Phase 2 kickoff: Feature 5 (FastAPI API)
+- [x] Validation all tests passing (56/56 ✅)
+- [x] Phase 2 kickoff: Feature 5 (FastAPI API) - COMPLETE
+- [x] Merge feat/fastapi-endpoint vers develop - COMPLETE
+- [x] Validation all tests passing (77/77 ✅) - COMPLETE
+- [ ] Tag release v0.3 (Features 1-5 complete)
 
-## To-do (Phase 2-4)
+## To-do (Phase 3-4)
 
-- [ ] Feature 5: FastAPI Inference API (CRITICAL - 3-4 jours)
-  - [ ] POST /predict endpoint
-  - [ ] GET /health endpoint
-  - [ ] GET /model/info endpoint
-  - [ ] Unit tests: 20+
 - [ ] Feature 6: Integration Tests (2-3 jours)
   - [ ] End-to-end pipeline tests
   - [ ] Mock SNCF API
