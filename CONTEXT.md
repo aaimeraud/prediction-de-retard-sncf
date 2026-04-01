@@ -2,8 +2,13 @@
 
 ## État actuel global
 
-- **Infrastructure initialisée:** Dockerfile TF+Colab, arborescence, guidelines, config Git.
-- **Architecture ML cible:** TF 2.x pour classification/régression retards court terme MVP IDF.
+- **Infrastructure initialisée :** 
+  - Docker Compose (Standard 2026, `compose.yaml`).
+  - Image Multi-arch TF 2.x (M1/M2/M3 compatible).
+  - Sécurité : UID/GID mapping, utilisateur `developer` non-privilégié.
+  - Arborescence interne au dépôt bare : `./worktrees/`.
+- **Architecture ML cible :** TF 2.x pour classification/régression retards court terme MVP IDF.
+- **Conventions Git :** Prefixes `feat/`, `hotfix/`, `docs/`, `infra/`, `chore/`, `refactor/`.
 - **Données sources:** GTFS statique, GTFS-RT/SIRI flux temps réel.
 
 ## Features Complétées (Session: 31 mars 2026)

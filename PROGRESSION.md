@@ -4,7 +4,12 @@
 
 - [x] Scaffolding de l'arborescence du projet (src, tests, docker, etc.).
 - [x] Rédaction des guidelines (Zero-Inline comments, worktrees, python3/pip3).
-- [x] Création du Dockerfile compatible TF + Colab et requirements de base.
+- [x] **Infrastructure Docker & Sécurité (infra/docker-setup)**
+  - [x] Dockerfile optimisé Apple Silicon (Multi-arch)
+  - [x] compose.yaml (Standards 2026, sans version tag)
+  - [x] Sécurisation via UID/GID mapping et utilisateur non-root
+  - [x] Documentation des procédures Docker dans README et GUIDELINES
+  - [x] Restructuration du dépôt (dossier ./worktrees/)
 - [x] **Feature 1: Data Loader (feat/data-loader)**
   - [x] GTFSDataLoader class pour télécharger et parser les fichiers GTFS
   - [x] Support des tables: stops, routes, trips, stop_times, calendar
