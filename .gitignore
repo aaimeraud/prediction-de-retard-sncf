@@ -37,3 +37,13 @@ htmlcov/
 
 jupyter_config.json
 .ipynb_checkpoints/
+
+gitdir
+HEAD
+ORIG_HEAD
+FETCH_HEAD
+COMMIT_EDITMSG
+commondir
+index
+index.lock
+logs/
