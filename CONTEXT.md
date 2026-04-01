@@ -139,14 +139,49 @@
 - **Commits:** c6e61cf (Streamlit Web Dashboard)
 - **Tag:** v0.5 (Feature 7 Complete)
 
-## État des Tests Actuels (Après Phase 3 - v0.5)
+### Feature 8: Model Training Pipeline (feat/model-training) - ✅ MERGED (Phase 4)
 
-- **Total Tests:** 140 passing
+- **Module:** src/model_training.py - ModelTrainingPipeline class
+- **Responsabilités:**
+  - GTFS data loading (JSON/ZIP) with error handling
+  - Data validation with quality checks
+  - Feature engineering integration
+  - Synthetic delay label generation (realistic 20% distribution)
+  - Model training orchestration with configurable hyperparameters
+  - Model evaluation (accuracy, precision, recall, F1-score)
+  - Model persistence (.keras format + metadata JSON)
+- **Pipeline Flow:**
+  - load_data() → GTFS DataFrames
+  - validate_data() → Validation result
+  - engineer_features() → 9-dimensional feature matrix
+  - generate_synthetic_labels() → Binary labels (0=on-time, 1=delayed)
+  - train_model() → DelayClassifier trained weights
+  - evaluate_model() → Metrics dict
+  - save_model() → Model file + metadata
+- **Tests:** 28 tests unitaires (mocked for TensorFlow compatibility)
+  - Pipeline initialization
+  - Data loading (JSON, ZIP, error handling)
+  - Data validation (success/failure cases)
+  - Feature engineering integration
+  - Synthetic labels (shape, distribution, reproducibility)
+  - Model training (output shape, history storage)
+  - Model evaluation (metrics presence and bounds)
+  - Model persistence (file creation, metadata content)
+  - Integration workflow
+  - Error handling (invalid dimensions, empty datasets)
+- **Docstrings:** Complet, zéro commentaires inline
+- **Commits:** 400d7d5 (Model Training Pipeline)
+- **Tag:** v0.6 (Feature 8 Complete)
+
+## État des Tests Actuels (Après Phase 4 - v0.6)
+
+- **Total Tests:** 168 passing
   - Data Pipeline (Features 1-3): 33 tests ✅
   - Classification Model (Feature 4): 23 tests ✅
   - FastAPI API (Feature 5): 21 tests ✅ (2 skipped)
   - Integration Tests (Feature 6): 18 tests ✅
   - Streamlit Dashboard (Feature 7): 28 tests ✅
+  - Model Training Pipeline (Feature 8): 28 tests ✅
 - **Coverage:** 100% of public methods and classes
 - **Quality:** All docstrings present, zero inline comments
 - **Syntax Validation:** Python compilation successful
