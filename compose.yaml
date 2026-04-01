@@ -1,0 +1,19 @@
+services:
+  ml-engine:
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: sncf-delay-predictor:latest
+    container_name: sncf-ml-dev
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - .:/app
+    ports:
+      - "8888:8888"
+      - "5000:5000"
+      - "8501:8501"
+    environment:
+      - TF_CPP_MIN_LOG_LEVEL=2
+    restart: unless-stopped
