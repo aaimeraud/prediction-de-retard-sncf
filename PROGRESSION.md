@@ -35,17 +35,32 @@
   - [x] Persistence: Save/load model avec metadata
   - [x] Tests unitaires: 23 tests passing (100%)
   - [x] Quality: 100% docstrings, zéro commentaires inline
-  - [x] Commit: 85a2eef
+  - [x] Merge vers develop: c7a9964
 
 ## En cours
 
-- [ ] Merge feat/classification-model vers develop
-- [ ] Communication des résultats et validation client
+- [x] Merge feat/classification-model vers develop - COMPLETE
+- [ ] Validation all tests passing (56/56 ✅)
+- [ ] Tag release v0.2 (Features 1-4 complete)
+- [ ] Phase 2 kickoff: Feature 5 (FastAPI API)
 
-## To-do
+## To-do (Phase 2-4)
 
-- [ ] Feature 5: FastAPI APIs pour prédictions (Phase 2)
-- [ ] Feature 6: WebUI pour visualisation (Streamlit/Colab)
-- [ ] Integration MCP SDK Python pour persistance de contexte
-- [ ] Deployment sur Colab
+- [ ] Feature 5: FastAPI Inference API (CRITICAL - 3-4 jours)
+  - [ ] POST /predict endpoint
+  - [ ] GET /health endpoint
+  - [ ] GET /model/info endpoint
+  - [ ] Unit tests: 20+
+- [ ] Feature 6: Integration Tests (2-3 jours)
+  - [ ] End-to-end pipeline tests
+  - [ ] Mock SNCF API
+  - [ ] Performance benchmarks
+- [ ] Feature 7: WebUI (4-5 jours)
+  - [ ] Streamlit dashboard OR Colab notebook
+  - [ ] Real-time predictions
+  - [ ] Model comparison
+- [ ] Feature 8: Real-time Collection (3-4 jours)
+  - [ ] SIRI streaming integration
+  - [ ] Data pipeline update
+- [ ] Feature 9: Model Registry (2-3 jours)
 - [ ] Tests d'acceptation end-to-end

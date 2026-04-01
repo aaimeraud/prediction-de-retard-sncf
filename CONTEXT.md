@@ -51,7 +51,7 @@
 - **Docstrings:** Complet, zéro commentaires inline
 - **Colab-ready:** Intégration seamless avec data_loader et validator
 
-### Feature 4: Classification Model (feat/classification-model) - ✅ IN PROGRESS
+### Feature 4: Classification Model (feat/classification-model) - ✅ MERGED
 
 - **Module:** src/model_classifier.py - DelayClassifier class
 - **Responsabilités:**
@@ -68,7 +68,7 @@
   - Full pipeline integration tests
 - **Docstrings:** Complet, zéro commentaires inline
 - **Colab-ready:** TensorFlow 2.x, numpy/pandas standard imports
-- **Commit:** 85a2eef
+- **Commits:** 85a2eef + 7ff3924 (docs) [MERGED: c7a9964]
 
 ## Constraints & Règles (Rappel QA/Engineer)
 
