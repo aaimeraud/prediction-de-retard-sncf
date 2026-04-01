@@ -48,28 +48,51 @@
   - [x] Quality: 100% docstrings, zéro commentaires inline
   - [x] CORS middleware et Auto Swagger UI
   - [x] Merge vers develop: d27e76e
+- [x] **Feature 6: Integration Tests (feat/integration-tests) - Phase 3**
+  - [x] End-to-end pipeline validation tests
+  - [x] Mock GTFS data and SNCF delay scenarios
+  - [x] Performance benchmarks (load, throughput)
+  - [x] Data flow validation (loader → engineer → model → API)
+  - [x] Tests unitaires: 18 tests passing (100%)
+  - [x] Quality: 100% docstrings, zéro commentaires inline
+  - [x] Merge vers develop: b1ed469
+  - [x] Tag v0.4 créé
+- [x] **Feature 7: Streamlit Web Dashboard (feat/streamlit-dashboard) - Phase 3**
+  - [x] Interactive single prediction interface
+  - [x] Batch CSV upload and bulk prediction processing
+  - [x] Model analytics (confusion matrix, feature importance)
+  - [x] Feature visualization (trends, distributions)
+  - [x] Real-time API health monitoring
+  - [x] Caching for performance optimization
+  - [x] Tests unitaires: 28 tests (model loading, prediction, batch, UI mocking, error handling)
+  - [x] Quality: 100% docstrings, zéro commentaires inline
+  - [x] Commit: c6e61cf
+  - [x] Tag v0.5 créé
+  - [x] Dependencies added: streamlit, plotly, pandas-profiling
+  - [x] Merge vers develop: c6e61cf
 
 ## En cours
 
-- [x] Merge feat/classification-model vers develop - COMPLETE
-- [x] Validation all tests passing (56/56 ✅)
-- [x] Phase 2 kickoff: Feature 5 (FastAPI API) - COMPLETE
-- [x] Merge feat/fastapi-endpoint vers develop - COMPLETE
-- [x] Validation all tests passing (77/77 ✅) - COMPLETE
-- [ ] Tag release v0.3 (Features 1-5 complete)
+- [x] Phase 1-2 complete: Features 1-5 (94 tests)
+- [x] Phase 3 complete: Features 6-7 (46 tests = 18 + 28)
+- [x] Total tests: 140 passing (all phases)
+- [x] Tag v0.5 released (Features 1-7)
+- [ ] Merge develop → main (v0.5)
 
-## To-do (Phase 3-4)
+## To-do (Phase 4+ Future)
 
-- [ ] Feature 6: Integration Tests (2-3 jours)
-  - [ ] End-to-end pipeline tests
-  - [ ] Mock SNCF API
-  - [ ] Performance benchmarks
-- [ ] Feature 7: WebUI (4-5 jours)
-  - [ ] Streamlit dashboard OR Colab notebook
-  - [ ] Real-time predictions
-  - [ ] Model comparison
-- [ ] Feature 8: Real-time Collection (3-4 jours)
-  - [ ] SIRI streaming integration
-  - [ ] Data pipeline update
-- [ ] Feature 9: Model Registry (2-3 jours)
+- [ ] Feature 8: Real-time SIRI Collection (3-4 jours)
+  - [ ] SIRI API client for live transit data
+  - [ ] Data transformation pipeline
+  - [ ] PostgreSQL storage (optional)
+- [ ] Feature 9: Model Registry & Versioning (2-3 jours)
+  - [ ] Model versioning system
+  - [ ] A/B testing framework
+  - [ ] Performance tracking
+- [ ] Feature 10: Advanced Analytics (2-3 jours)
+  - [ ] Explainability (SHAP/LIME)
+  - [ ] Root cause analysis
+  - [ ] Trend forecasting
+- [ ] Deployment to Cloud (GCP/AWS)
+- [ ] CI/CD Pipeline (GitHub Actions)
 - [ ] Tests d'acceptation end-to-end
