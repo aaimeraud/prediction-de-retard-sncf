@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: sncf-delay-predictor:prod
+    container_name: sncf-api-prod
+    user: "${UID:-1000}:${GID:-1000}"
+
+    environment:
+      - TF_CPP_MIN_LOG_LEVEL=2
+      - PYTHONUNBUFFERED=1
+
+    ports:
+      - "127.0.0.1:8000:8000"
+
+    volumes:
+      - ./models:/app/models:ro
+      - ./logs:/app/logs
+
+    restart: on-failure:3
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 4G
+        reservations:
+          cpus: "1.0"
+          memory: 2G
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+
+    read_only_root_filesystem: false
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: sncf-delay-predictor:dev
+    container_name: sncf-ml-dev
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - .:/app
+    ports:
+      - "8888:8888"
+      - "5000:5000"
+      - "8501:8501"
+    environment:
+      - TF_CPP_MIN_LOG_LEVEL=2
+    restart: unless-stopped
