@@ -1,0 +1,44 @@
+FROM tensorflow/tensorflow:2.15.0-python3.11 as builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements-prod.txt .
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --user --no-cache-dir -r requirements-prod.txt
+
+FROM tensorflow/tensorflow:2.15.0-python3.11-slim
+
+ARG UID=1000
+ARG GID=1000
+
+ENV PYTHONPATH /app
+ENV HOST 0.0.0.0
+ENV PYTHONUNBUFFERED 1
+ENV TF_CPP_MIN_LOG_LEVEL 2
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN groupadd -g $GID developer && \
+    useradd -m -u $UID -g developer developer
+
+COPY --from=builder /root/.local /home/developer/.local
+ENV PATH=/home/developer/.local/bin:$PATH
+
+COPY src /app/src
+COPY tests /app/tests
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python3 -c "import tensorflow; import fastapi; print('OK')" || exit 1
+
+USER developer
+
+EXPOSE 8000
+
+CMD ["python3", "-m", "uvicorn", "src.api_server:app", "--host", "0.0.0.0", "--port", "8000"]
