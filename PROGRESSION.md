@@ -70,14 +70,30 @@
   - [x] Tag v0.5 créé
   - [x] Dependencies added: streamlit, plotly, pandas-profiling
   - [x] Merge vers develop: c6e61cf
+  - [x] Tag v0.5 créé
+- [x] **Feature 8: Model Training Pipeline (feat/model-training) - Phase 4**
+  - [x] ModelTrainingPipeline orchestration class
+  - [x] Load GTFS data (JSON/ZIP) with validation
+  - [x] Data quality validation before training
+  - [x] Feature engineering from GTFS records
+  - [x] Synthetic delay label generation (20% distribution)
+  - [x] Train DelayClassifier with hyperparameters
+  - [x] Model evaluation (accuracy, precision, recall, F1)
+  - [x] Model persistence (.keras + metadata JSON)
+  - [x] Tests unitaires: 28 tests (pipeline, data loading, validation, training, evaluation, persistence)
+  - [x] Quality: 100% docstrings, zéro commentaires inline
+  - [x] Commit: 400d7d5
+  - [x] Tag v0.6 créé
+  - [x] Merge vers develop: 400d7d5
 
 ## En cours
 
 - [x] Phase 1-2 complete: Features 1-5 (94 tests)
 - [x] Phase 3 complete: Features 6-7 (46 tests = 18 + 28)
-- [x] Total tests: 140 passing (all phases)
-- [x] Tag v0.5 released (Features 1-7)
-- [ ] Merge develop → main (v0.5)
+- [x] Phase 4 - Feature 8: Model Training Pipeline (28 tests)
+- [x] Total tests: 168 passing (all phases: 94 + 18 + 28 + 28)
+- [ ] Tag v0.6 released (Features 1-8)
+- [ ] Merge develop → main (v0.6)
 
 ## To-do (Phase 4+ Future)
 
