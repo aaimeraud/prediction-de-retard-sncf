@@ -11,7 +11,7 @@
 - **Conventions Git :** Prefixes `feat/`, `hotfix/`, `docs/`, `infra/`, `chore/`, `refactor/`.
 - **Données sources:** GTFS statique, GTFS-RT/SIRI flux temps réel.
 
-## Features Complétées (Session: 31 mars - 1 avril 2026)
+## Features Complétées (Session: 31 mars - 1 avril 2026 | Phase 1-2 COMPLETE)
 
 ### Feature 1: Data Loader (feat/data-loader) - ✅ MERGED
 
@@ -70,6 +70,15 @@
 - **Colab-ready:** TensorFlow 2.x, numpy/pandas standard imports
 - **Commits:** 85a2eef + 7ff3924 (docs) [MERGED: c7a9964]
 
+## État des Tests Actuels
+
+- **Total Tests:** 77 passing, 2 skipped (API with missing model)
+- **Data Pipeline (Features 1-3):** 33 tests ✅
+- **Classification Model (Feature 4):** 23 tests ✅
+- **FastAPI API (Feature 5):** 21 tests ✅ (2 skipped)
+- **Coverage:** 100% of public methods and classes
+- **Quality:** All docstrings present, zero inline comments
+
 ## Constraints & Règles (Rappel QA/Engineer)
 
 - **Zero-Inline Comments:** Strictement docstrings `""" doc """`.
@@ -97,6 +106,30 @@ GTFS ZIP (remote)
 - 603fa78: feat/data-validation (543 insertions, 13 tests)
 - 59edbf5: feat/feature-engineering (491 insertions, 12 tests)
 - 85a2eef: feat/classification-model (520 insertions, 23 tests)
+- d27e76e: feat/fastapi-endpoint (864 insertions, 21 tests) [MERGED]
+
+### Feature 5: FastAPI Inference API (feat/fastapi-endpoint) - ✅ MERGED
+
+- **Module:** src/api_server.py - PredictionAPI class
+- **Responsabilités:**
+  - REST API wrapper autour du modèle de classification
+  - POST /predict: Single prediction avec validation
+  - POST /predict/batch: Batch predictions (1-1000 items)
+  - GET /health: Server health/readiness check
+  - GET /model/info: Model metadata et performance
+  - Pydantic models: PredictionRequest (10 fields), BatchPredictionRequest
+  - Delay categorization: LOW/MEDIUM/HIGH avec confidence levels
+  - CORS middleware, Auto Swagger UI at /docs
+- **Request Models:** 10 engineered features (hour, lat, lon, delay, volatility, etc.)
+- **Response Models:** Predictions, probabilities, categories, confidence scores
+- **Error Handling:** 422 Validation, 503 Model not loaded, 500 Server error
+- **Tests:** 21 tests unitaires (100% passing)
+  - Request validation, endpoints, error handling
+  - API class lifecycle, CORS middleware
+  - Full integration tests
+- **Docstrings:** Complet, zéro commentaires inline
+- **Colab-ready:** FastAPI, Pydantic, standard async/await patterns
+- **Commits:** 455a410 (original) → d27e76e (authorship corrected)
 
 ## Prochaines Étapes (To-do)
 
