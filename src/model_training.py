@@ -166,8 +166,7 @@ class ModelTrainingPipeline:
             epochs=epochs,
             batch_size=batch_size,
             verbose=verbose,
-            validation_split=validation_split,
-            verbose=1
+            validation_split=validation_split
         )
         
         self.training_history = history.metrics
