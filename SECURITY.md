@@ -28,6 +28,7 @@ docker compose up -d dev
 ```
 
 This container includes:
+
 - ✅ OpenSSL explicitly installed
 - ✅ Non-root user (developer)
 - ✅ UID/GID mapping for file permissions
@@ -49,6 +50,7 @@ docker build -f Dockerfile.prod -t sncf-api:prod .
 ```
 
 **Security improvements:**
+
 - ✅ Multi-stage build (reduced attack surface, smaller image)
 - ✅ Slim base image (tensorflow:2.15.0-python3.11-slim)
 - ✅ OpenSSL installed and validated
@@ -63,6 +65,7 @@ docker compose -f compose-prod.yaml up -d api
 ```
 
 **Security features:**
+
 - ✅ port: 127.0.0.1:8000 (localhost only, requires reverse proxy)
 - ✅ read_only_root_filesystem: false (needed for models)
 - ✅ security_opt: no-new-privileges:true
@@ -76,6 +79,7 @@ docker compose -f compose-prod.yaml up -d api
 ### 3. Use a Reverse Proxy (nginx/Caddy)
 
 **nginx example:**
+
 ```nginx
 server {
     listen 443 ssl http2;
@@ -91,10 +95,10 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        
+
         # Request size limits
         client_max_body_size 10M;
-        
+
         # Timeouts
         proxy_connect_timeout 10s;
         proxy_send_timeout 30s;
@@ -118,6 +122,7 @@ PYTHONUNBUFFERED=1
 ```
 
 Add to `.gitignore`:
+
 ```bash
 .env
 .env.prod
@@ -129,6 +134,7 @@ Add to `.gitignore`:
 ### 5. Input Validation & Rate Limiting
 
 API automatically validates:
+
 - ✅ hour_of_day: 0-23
 - ✅ stop_lat: -90 to 90
 - ✅ stop_lon: -180 to 180
@@ -136,6 +142,7 @@ API automatically validates:
 - ✅ Pydantic type validation
 
 For production, add rate limiting (e.g., with nginx):
+
 ```nginx
 limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
 
@@ -163,12 +170,14 @@ location / {
 ### Regular Maintenance
 
 - [ ] **Weekly:** Check Docker image for vulnerabilities
+
   ```bash
   docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     aquasec/trivy image sncf-api:prod
   ```
 
 - [ ] **Monthly:** Update base images and dependencies
+
   ```bash
   pip3 install -U pip
   pip3 install --upgrade -r requirements-prod.txt
@@ -182,20 +191,24 @@ location / {
 ## Known Warnings (Not Security Issues)
 
 ### 1. Pydantic V1 Style Validators (⚠️ Deprecation)
+
 - Status: Non-blocking, validation works
 - Action: Plan migration to `@field_validator` before Pydantic V3.0
 
 ### 2. Keras Early Stopping (⚠️ Information)
+
 - Status: Training completes normally
 - Action: None required
 
 ### 3. NumPy Conversion Warning (⚠️ Future)
+
 - Status: Non-blocking
 - Action: Will auto-fix in NumPy 1.26+
 
 ## Reporting Security Issues
 
 If you discover a security vulnerability:
+
 1. **DO NOT** open a public GitHub issue
 2. Contact: [Your security contact email]
 3. Provide reproducible proof-of-concept
