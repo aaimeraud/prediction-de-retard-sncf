@@ -1,11 +1,8 @@
 """
-Streamlit Web Dashboard for SNCF Delay Prediction.
+Streamlit Web Dashboard for SNCF Delay Prediction - Simplified Demo.
 
-Interactive interface for:
-- Single delay predictions with feature inputs
-- Batch CSV processing with bulk predictions
-- Model analytics and feature importance visualization
-- Real-time API health status monitoring
+This version works without TensorFlow model loading issues on macOS.
+Uses simulated predictions for demo purpose.
 """
 
 import streamlit as st
@@ -13,96 +10,58 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from datetime import datetime, timedelta
-from pathlib import Path
-import sys
-from typing import Dict, Tuple, Optional
-import requests
-
-sys.path.insert(0, str(Path(__file__).parent))
-
-from model_classifier import DelayClassifier
-from feature_engineer import FeatureEngineer
+from datetime import datetime
+from io import StringIO
 
 
-@st.cache_resource
-def load_model() -> DelayClassifier:
+st.set_page_config(
+    page_title="SNCF Delay Predictor",
+    page_icon="🚆",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+st.title("🚆 SNCF Delay Prediction Dashboard")
+st.markdown("*Advanced ML Model for Train Delay Forecasting - Demo Mode*")
+
+
+def get_api_health() -> dict:
     """
-    Load DelayClassifier model with caching.
-    
-    Falls back to uninitialized model if saved model not found
-    (useful for testing without pre-trained weights).
-    
-    Returns:
-        DelayClassifier: Model instance for delay predictions.
-    """
-    try:
-        classifier = DelayClassifier(n_features=9)
-        model_path = Path(__file__).parent.parent / "models" / "delay_classifier.keras"
-        
-        if model_path.exists():
-            classifier.load_model(str(model_path))
-            st.sidebar.success("✅ Model loaded from disk")
-        else:
-            st.sidebar.info("ℹ️ Using untrained model (demo mode)")
-        
-        return classifier
-    except Exception as e:
-        st.sidebar.error(f"⚠️ Model load error: {str(e)[:50]}")
-        return DelayClassifier(n_features=9)
-
-
-@st.cache_resource
-def load_feature_engineer() -> FeatureEngineer:
-    """
-    Load FeatureEngineer instance with caching.
+    Check API health status (simulated).
     
     Returns:
-        FeatureEngineer: Feature processing instance.
+        Dict with status and timestamp.
     """
-    return FeatureEngineer()
+    return {"status": True, "timestamp": datetime.now()}
 
 
-@st.cache_data
-def predict_batch(features_df: pd.DataFrame, _classifier: DelayClassifier) -> np.ndarray:
+def simulate_prediction(features: np.ndarray) -> tuple:
     """
-    Predict delays for batch of records with caching.
+    Simulate ML model prediction.
     
-    Args:
-        features_df: DataFrame with engineered features.
-        _classifier: Trained classification model (prefixed with _ to skip Streamlit hashing).
+    Uses features to generate realistic-looking predictions.
+    """
+    hour, lat, lon, stops, day, vehicle, avg_delay, weather, other = features[0]
     
-    Returns:
-        np.ndarray: Predicted delay classes (0 or 1).
-    """
-    return _classifier.predict(features_df.values)
-
-
-def get_api_health() -> Dict[str, bool]:
-    """
-    Check API health status.
+    base_score = 0.5
+    base_score += (avg_delay / 120) * 0.3
+    base_score += (weather / 2) * 0.2
+    base_score += (stops / 50) * 0.1
+    base_score += (hour % 12) / 24 * 0.1
+    base_score = min(1.0, max(0.0, base_score))
     
-    Returns:
-        Dict with 'status' (bool) and 'timestamp' keys.
-    """
-    try:
-        response = requests.get("http://localhost:5000/health", timeout=2)
-        return {"status": response.status_code == 200, "timestamp": datetime.now()}
-    except Exception:
-        return {"status": False, "timestamp": datetime.now()}
-
-
-def render_sidebar() -> Dict:
-    """
-    Render sidebar with model info and health status.
+    prediction = 1 if base_score > 0.5 else 0
+    confidence = abs(base_score - 0.5) * 2 + 0.5
     
-    Returns:
-        Dict with sidebar configuration values.
-    """
+    return prediction, confidence
+
+
+def render_sidebar():
+    """Render sidebar with model info and health status."""
     st.sidebar.title("📊 Model Info")
     st.sidebar.markdown("---")
     
-    st.sidebar.metric("Model Version", "v1.0")
+    st.sidebar.metric("Model Version", "v1.0 (Demo)")
     st.sidebar.metric("Features", "9")
     st.sidebar.metric("Training Date", "2026-03-31")
     
@@ -111,22 +70,17 @@ def render_sidebar() -> Dict:
     
     health = get_api_health()
     status_color = "🟢" if health["status"] else "🔴"
-    status_text = "Healthy" if health["status"] else "Offline"
+    status_text = "Healthy (Demo)" if health["status"] else "Offline"
     
     st.sidebar.write(f"API Status: {status_color} {status_text}")
     st.sidebar.caption(f"Last check: {health['timestamp'].strftime('%H:%M:%S')}")
     
-    return {"health": health}
+    st.sidebar.markdown("---")
+    st.sidebar.info("💡 **Demo Mode**: Using simulated predictions for testing the UI")
 
 
-def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: FeatureEngineer):
-    """
-    Render single prediction interface.
-    
-    Args:
-        classifier: Trained classification model.
-        feature_eng: Feature engineering instance.
-    """
+def render_single_prediction_tab():
+    """Render single prediction interface."""
     st.subheader("🎯 Single Prediction")
     
     col1, col2 = st.columns(2)
@@ -204,36 +158,23 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
         )
     
     if st.button("🚆 Predict Delay", use_container_width=True):
-        try:
-            features = np.array([
-                hour_of_day,
-                stop_lat,
-                stop_lon,
-                num_stops,
-                day_of_week,
-                vehicle_type,
-                avg_delay,
-                weather_impact,
-                0.5
-            ]).reshape(1, -1)
-            
-            prediction = classifier.predict(features)[0]
-            probability = classifier.predict_proba(features).max()
-            
-            st.success(f"Prediction: {'⚠️ Delayed' if prediction else '✅ On-Time'}")
-            st.metric("Confidence", f"{probability:.1%}")
-        except Exception as e:
-            st.error(f"⚠️ Prediction error: {str(e)[:100]}")
-            st.info("💡 Using demo mode - predictions are simulated for testing")
+        features = np.array([
+            hour_of_day, stop_lat, stop_lon, num_stops, day_of_week,
+            vehicle_type, avg_delay, weather_impact, 0.5
+        ]).reshape(1, -1)
+        
+        prediction, prob = simulate_prediction(features)
+        
+        if prediction == 1:
+            st.success("⚠️ **Predicted: DELAYED**")
+        else:
+            st.success("✅ **Predicted: ON-TIME**")
+        
+        st.metric("Confidence", f"{prob:.1%}")
 
 
-def render_batch_upload_tab(classifier: DelayClassifier):
-    """
-    Render batch CSV upload and prediction interface.
-    
-    Args:
-        classifier: Trained classification model.
-    """
+def render_batch_upload_tab():
+    """Render batch CSV upload and prediction interface."""
     st.subheader("📤 Batch Prediction")
     
     uploaded_file = st.file_uploader(
@@ -249,36 +190,45 @@ def render_batch_upload_tab(classifier: DelayClassifier):
             st.dataframe(df.head(), use_container_width=True)
             
             if st.button("🔮 Predict All", use_container_width=True):
-                try:
-                    predictions = predict_batch(df, classifier)
+                predictions = []
+                for idx, row in df.iterrows():
+                    features = np.array([
+                        row.get('hour', 12),
+                        row.get('lat', 48.8),
+                        row.get('lon', 2.3),
+                        row.get('stops', 10),
+                        row.get('day', 2),
+                        row.get('vehicle', 1),
+                        row.get('avg_delay', 5),
+                        row.get('weather', 0),
+                        0.5
+                    ]).reshape(1, -1)
                     
-                    results_df = df.copy()
-                    results_df["prediction"] = predictions
-                    results_df["delay"] = results_df["prediction"].apply(lambda x: "Delayed" if x else "On-Time")
-                    
-                    st.dataframe(results_df, use_container_width=True)
-                    
-                    csv_buffer = results_df.to_csv(index=False)
-                    st.download_button(
-                        label="📥 Download Results",
-                        data=csv_buffer,
-                        file_name=f"predictions_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                        mime="text/csv"
-                    )
-                except Exception as e:
-                    st.error(f"⚠️ Batch prediction error: {str(e)[:100]}")
+                    pred, _ = simulate_prediction(features)
+                    predictions.append(pred)
+                
+                results_df = df.copy()
+                results_df["prediction"] = predictions
+                results_df["delay"] = results_df["prediction"].apply(
+                    lambda x: "Delayed" if x else "On-Time"
+                )
+                
+                st.dataframe(results_df, use_container_width=True)
+                
+                csv_buffer = results_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Results",
+                    data=csv_buffer,
+                    file_name=f"predictions_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
         
         except Exception as e:
             st.error(f"Error processing file: {e}")
 
 
-def render_analytics_tab(classifier: DelayClassifier):
-    """
-    Render model analytics and performance metrics.
-    
-    Args:
-        classifier: Trained classification model.
-    """
+def render_analytics_tab():
+    """Render model analytics and performance metrics."""
     st.subheader("📈 Model Analytics")
     
     col1, col2, col3 = st.columns(3)
@@ -321,9 +271,7 @@ def render_analytics_tab(classifier: DelayClassifier):
 
 
 def render_visualization_tab():
-    """
-    Render feature visualization and exploration.
-    """
+    """Render feature visualization and exploration."""
     st.subheader("🎨 Feature Visualization")
     
     tab1, tab2 = st.tabs(["Trends", "Distribution"])
@@ -367,40 +315,25 @@ def render_visualization_tab():
 
 
 def main():
-    """
-    Main Streamlit application entry point.
-    """
-    st.set_page_config(
-        page_title="SNCF Delay Predictor",
-        page_icon="🚆",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
-    
-    st.title("🚆 SNCF Delay Prediction Dashboard")
-    st.markdown("*Advanced ML Model for Train Delay Forecasting*")
-    
+    """Main Streamlit application entry point."""
     render_sidebar()
-    
-    classifier = load_model()
-    feature_eng = load_feature_engineer()
     
     tabs = st.tabs(["🎯 Single", "📤 Batch", "📈 Analytics", "🎨 Visualization"])
     
     with tabs[0]:
-        render_single_prediction_tab(classifier, feature_eng)
+        render_single_prediction_tab()
     
     with tabs[1]:
-        render_batch_upload_tab(classifier)
+        render_batch_upload_tab()
     
     with tabs[2]:
-        render_analytics_tab(classifier)
+        render_analytics_tab()
     
     with tabs[3]:
         render_visualization_tab()
     
     st.markdown("---")
-    st.caption("SNCF Delay Prediction System | v0.4 | 2026")
+    st.caption("SNCF Delay Prediction System | v0.5 Demo | 2026")
 
 
 if __name__ == "__main__":
