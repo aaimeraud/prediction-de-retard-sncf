@@ -152,7 +152,7 @@
 
 ### Feature 9: SNCF SIRI API Integration (feat/siri-collector)
 
-- **Modules:** 
+- **Modules:**
   - src/siri_collector.py - SIRIClient, SIRICache, SIRICollector
   - tests/test_siri_collector.py
   - docs/SIRI_INTEGRATION.md
@@ -181,7 +181,7 @@
   - Integration: 2 E2E tests (workflow, persistence)
   - Others: 5 supporting tests
 - **Docstrings:** Complet, zéro commentaires inline
-- **Commits:** 
+- **Commits:**
   - d9c999a: feat(siri): Add SNCF SIRI collector with caching
   - f61fa39: docs: Add SIRI integration guide
 - **Branch:** feat/siri-collector (HEAD @ f61fa39)
@@ -297,6 +297,7 @@
 ## État Global du Projet
 
 ### Statistiques Actuelles
+
 - **Branches feature créées:** 3 (feat/siri-collector, feat/model-versioning, feat/ci-cd-pipeline)
 - **Tests totaux:** 219 (168 existing + 27 SIRI + 24 Registry = 219)
 - **Code quality:** 100% docstrings, 0 inline comments
@@ -305,6 +306,7 @@
 - **Documentation:** 11 guides (README, GUIDELINES, CONTEXT, PROGRESSION, SIRI, Registry, CI/CD, etc.)
 
 ### Prochaines actions
+
 1. [ ] Merge feat/siri-collector → develop
 2. [ ] Merge feat/model-versioning → develop
 3. [ ] Merge feat/ci-cd-pipeline → develop
@@ -313,6 +315,7 @@
 6. [ ] Plan Phase 8+: Advanced analytics, Kubernetes, optimization
 
 ### Architecture ML Finale (v0.7)
+
 ```
 Data Input (GTFS + SIRI)
     ↓
@@ -334,6 +337,7 @@ Staging/Production Deployment
 ```
 
 ### Infrastructure Stack
+
 - **Runtime:** Python 3.9+ (TensorFlow 2.15.0)
 - **ML Framework:** TensorFlow 2.x with Keras API
 - **API:** FastAPI + Uvicorn
@@ -344,9 +348,9 @@ Staging/Production Deployment
 - **CI/CD:** GitHub Actions
 - **Code Quality:** pytest, flake8, mypy, bandit
 - **Deployment:** Docker → GHCR → Staging/Production
-
   - Model evaluation (accuracy, precision, recall, F1-score)
   - Model persistence (.keras format + metadata JSON)
+
 - **Pipeline Flow:**
   - load_data() → GTFS DataFrames
   - validate_data() → Validation result
