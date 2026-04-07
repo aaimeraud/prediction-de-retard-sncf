@@ -216,7 +216,7 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
     with col5:
         route_type_3 = st.checkbox("Route Type 3 (Bus)", value=False)
     
-    if st.button("🚆 Predict Delay", use_container_width=True):
+    if st.button("🚆 Predict Delay", width='stretch'):
         try:
             is_peak = 1 if is_peak_hours else 0
             is_idf = 1 if is_ile_de_france else 0
@@ -274,9 +274,9 @@ def render_batch_upload_tab(classifier: DelayClassifier):
         try:
             df = pd.read_csv(uploaded_file)
             st.write(f"**Loaded {len(df)} records**")
-            st.dataframe(df.head(), use_container_width=True)
+            st.dataframe(df.head(), width='stretch')
             
-            if st.button("🔮 Predict All", use_container_width=True):
+            if st.button("🔮 Predict All", width='stretch'):
                 try:
                     predictions = predict_batch(df, classifier)
                     
@@ -284,7 +284,7 @@ def render_batch_upload_tab(classifier: DelayClassifier):
                     results_df["prediction"] = predictions
                     results_df["delay"] = results_df["prediction"].apply(lambda x: "Delayed" if x else "On-Time")
                     
-                    st.dataframe(results_df, use_container_width=True)
+                    st.dataframe(results_df, width='stretch')
                     
                     csv_buffer = results_df.to_csv(index=False)
                     st.download_button(
@@ -332,7 +332,7 @@ def render_analytics_tab(classifier: DelayClassifier):
         colorscale="Blues"
     ))
     fig_cm.update_layout(title="Confusion Matrix", height=400)
-    st.plotly_chart(fig_cm, use_container_width=True)
+    st.plotly_chart(fig_cm, width='stretch')
     
     st.write("**Feature Importance**")
     features = ["Hour", "Latitude", "Longitude", "Stops", "Day", "Vehicle", "Avg Delay", "Weather", "Other"]
@@ -345,7 +345,7 @@ def render_analytics_tab(classifier: DelayClassifier):
         marker_color="rgba(31, 119, 180, 0.8)"
     ))
     fig_fi.update_layout(title="Feature Importance", xaxis_title="Importance", height=400)
-    st.plotly_chart(fig_fi, use_container_width=True)
+    st.plotly_chart(fig_fi, width='stretch')
 
 
 def render_visualization_tab():
@@ -374,7 +374,7 @@ def render_visualization_tab():
             yaxis_title="Delay Rate (%)",
             height=400
         )
-        st.plotly_chart(fig_trend, use_container_width=True)
+        st.plotly_chart(fig_trend, width='stretch')
     
     with tab2:
         st.write("**Delay Duration Distribution**")
@@ -391,7 +391,7 @@ def render_visualization_tab():
             yaxis_title="Frequency",
             height=400
         )
-        st.plotly_chart(fig_dist, use_container_width=True)
+        st.plotly_chart(fig_dist, width='stretch')
 
 
 def main():
