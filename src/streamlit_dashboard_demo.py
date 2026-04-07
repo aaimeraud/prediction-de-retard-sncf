@@ -157,7 +157,7 @@ def render_single_prediction_tab():
             step=0.1
         )
     
-    if st.button("🚆 Predict Delay", use_container_width=True):
+    if st.button("🚆 Predict Delay", width='stretch'):
         features = np.array([
             hour_of_day, stop_lat, stop_lon, num_stops, day_of_week,
             vehicle_type, avg_delay, weather_impact, 0.5
@@ -187,9 +187,9 @@ def render_batch_upload_tab():
         try:
             df = pd.read_csv(uploaded_file)
             st.write(f"**Loaded {len(df)} records**")
-            st.dataframe(df.head(), use_container_width=True)
+            st.dataframe(df.head(), width='stretch')
             
-            if st.button("🔮 Predict All", use_container_width=True):
+            if st.button("🔮 Predict All", width='stretch'):
                 predictions = []
                 for idx, row in df.iterrows():
                     features = np.array([
@@ -213,7 +213,7 @@ def render_batch_upload_tab():
                     lambda x: "Delayed" if x else "On-Time"
                 )
                 
-                st.dataframe(results_df, use_container_width=True)
+                st.dataframe(results_df, width='stretch')
                 
                 csv_buffer = results_df.to_csv(index=False)
                 st.download_button(
@@ -254,7 +254,7 @@ def render_analytics_tab():
         colorscale="Blues"
     ))
     fig_cm.update_layout(title="Confusion Matrix", height=400)
-    st.plotly_chart(fig_cm, use_container_width=True)
+    st.plotly_chart(fig_cm, width='stretch')
     
     st.write("**Feature Importance**")
     features = ["Hour", "Latitude", "Longitude", "Stops", "Day", "Vehicle", "Avg Delay", "Weather", "Other"]
@@ -267,7 +267,7 @@ def render_analytics_tab():
         marker_color="rgba(31, 119, 180, 0.8)"
     ))
     fig_fi.update_layout(title="Feature Importance", xaxis_title="Importance", height=400)
-    st.plotly_chart(fig_fi, use_container_width=True)
+    st.plotly_chart(fig_fi, width='stretch')
 
 
 def render_visualization_tab():
@@ -294,7 +294,7 @@ def render_visualization_tab():
             yaxis_title="Delay Rate (%)",
             height=400
         )
-        st.plotly_chart(fig_trend, use_container_width=True)
+        st.plotly_chart(fig_trend, width='stretch')
     
     with tab2:
         st.write("**Delay Duration Distribution**")
@@ -311,7 +311,7 @@ def render_visualization_tab():
             yaxis_title="Frequency",
             height=400
         )
-        st.plotly_chart(fig_dist, use_container_width=True)
+        st.plotly_chart(fig_dist, width='stretch')
 
 
 def main():
