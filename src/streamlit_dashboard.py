@@ -44,7 +44,7 @@ def load_model() -> DelayClassifier:
             st.sidebar.info("ℹ️ Training initial machine learning model (generating weights)...")
             model_path.parent.mkdir(parents=True, exist_ok=True)
             
-            # Using pandas DataFrame/Series as expected by DelayClassifier typings
+            
             features_names = [f"feat_{i}" for i in range(14)]
             X_train = pd.DataFrame(np.random.randn(100, 14), columns=features_names)
             y_train = pd.Series(np.random.randint(0, 2, 100))
@@ -85,7 +85,7 @@ def predict_batch(features_df: pd.DataFrame, _classifier: DelayClassifier) -> np
         np.ndarray: Predicted delay classes (0 or 1).
     """
     
-    # Ensure columns match expected input if needed
+    
     features_names = [f"feat_{i}" for i in range(14)]
     if len(features_df.columns) == 14:
         features_df.columns = features_names
@@ -121,7 +121,7 @@ def render_sidebar() -> Dict:
     st.sidebar.metric("Features", "14")
     st.sidebar.metric("Training Date", "2026-03-31")
     
-    # System health widget is hidden for Streamlit Cloud
+    
     
     return {}
 
@@ -139,7 +139,7 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
     col1, col2 = st.columns(2)
     
     with col1:
-        st.write("**Trip Characteristics**")
+        st.write("**Temporal Features**")
         hour_of_day = st.slider(
             "Hour of Day",
             min_value=0,
@@ -148,6 +148,32 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
             help="Departure hour (0-23)"
         )
         
+        time_of_day_seconds = st.number_input(
+            "Time of Day (seconds)",
+            min_value=0,
+            max_value=86400,
+            value=43200,
+            step=3600,
+            help="Seconds since midnight"
+        )
+        
+        is_peak_hours = st.checkbox(
+            "Is Peak Hours",
+            value=False,
+            help="Occurs during peak traffic hours"
+        )
+        
+        service_id = st.number_input(
+            "Service ID (Categorical code)",
+            min_value=0,
+            max_value=1000,
+            value=0,
+            step=1,
+            help="Numeric code for service ID"
+        )
+
+    with col2:
+        st.write("**Geographic & Route Info**")
         stop_lat = st.number_input(
             "Stop Latitude",
             min_value=-90.0,
@@ -155,16 +181,6 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
             value=48.8566,
             step=0.0001,
             help="Geographic latitude"
-        )
-    
-    with col2:
-        st.write("**Route Information**")
-        num_stops = st.number_input(
-            "Number of Stops",
-            min_value=1,
-            max_value=100,
-            value=10,
-            help="Planned stops on route"
         )
         
         stop_lon = st.number_input(
@@ -175,56 +191,58 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
             step=0.0001,
             help="Geographic longitude"
         )
-    
-    col3, col4 = st.columns(2)
-    
+        
+        is_ile_de_france = st.checkbox(
+            "Is Ile-de-France",
+            value=False,
+            help="Stop is located in IDF region"
+        )
+        
+        route_short_name = st.number_input(
+            "Route Short Name (Categorical code)",
+            min_value=0,
+            max_value=1000,
+            value=0,
+            step=1,
+            help="Numeric code for route name"
+        )
+        
+    st.write("**Route Types (Dummy Variables)**")
+    col3, col4, col5 = st.columns(3)
     with col3:
-        st.write("**Features**")
-        day_of_week = st.selectbox(
-            "Day of Week",
-            options=list(range(7)),
-            format_func=lambda x: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][x]
-        )
-        
-        vehicle_type = st.selectbox(
-            "Vehicle Type",
-            options=[0, 1, 2],
-            format_func=lambda x: ["TER", "TGV", "INTERCITES"][x]
-        )
-    
+        route_type_0 = st.checkbox("Route Type 0 (Tram)", value=False)
     with col4:
-        st.write("**Delays**")
-        avg_delay = st.number_input(
-            "Average Delay (minutes)",
-            min_value=0.0,
-            max_value=120.0,
-            value=5.0,
-            step=0.5
-        )
-        
-        weather_impact = st.number_input(
-            "Weather Impact (0-1)",
-            min_value=0.0,
-            max_value=1.0,
-            value=0.0,
-            step=0.1
-        )
+        route_type_2 = st.checkbox("Route Type 2 (Rail)", value=True)
+    with col5:
+        route_type_3 = st.checkbox("Route Type 3 (Bus)", value=False)
     
     if st.button("🚆 Predict Delay", use_container_width=True):
         try:
+            is_peak = 1 if is_peak_hours else 0
+            is_idf = 1 if is_ile_de_france else 0
+            rt_0 = 1 if route_type_0 else 0
+            rt_2 = 1 if route_type_2 else 0
+            rt_3 = 1 if route_type_3 else 0
+            
             features = np.array([
                 hour_of_day,
+                time_of_day_seconds,
+                service_id,
+                is_peak,
+                route_short_name,
+                rt_0,
+                rt_2,
+                rt_3,
                 stop_lat,
                 stop_lon,
-                num_stops,
-                day_of_week,
-                vehicle_type,
-                avg_delay,
-                weather_impact,
-                0.5, 0, 0, 0, 0, 0
+                is_idf
             ]).reshape(1, -1)
             
-            features_names = [f"feat_{i}" for i in range(14)]
+            features_names = [
+                "hour_of_day", "time_of_day_seconds", "service_id", "is_peak_hours",
+                "route_short_name", "route_type_0", "route_type_2", "route_type_3",
+                "stop_lat", "stop_lon", "is_ile_de_france"
+            ]
             features_df = pd.DataFrame(features, columns=features_names)
             
             prediction = classifier.predict(features_df)[0]
