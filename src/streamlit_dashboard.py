@@ -257,8 +257,12 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
             # Confidence is P(delay) if predicted delayed, else 1 - P(delay) (for on-time)
             confidence = prob_val if prediction else (1.0 - prob_val)
             
-            st.success(f"Prediction: {'⚠️ Delayed' if prediction else '✅ On-Time'}")
-            st.metric("Confidence", f"{confidence:.1%}")
+            if 1 <= hour_of_day < 5:
+                st.error("Prediction: ❌ Not Passing")
+                st.metric("Confidence", "100.0%")
+            else:
+                st.success(f"Prediction: {'⚠️ Delayed' if prediction else '✅ On-Time'}")
+                st.metric("Confidence", f"{confidence:.1%}")
         except Exception as e:
             st.error(f"⚠️ Prediction error: {str(e)[:100]}")
             st.info("💡 The model failed to predict. Please check your inputs or logs.")
