@@ -27,7 +27,7 @@ def main():
         
     print(f"📥 Downloading real GTFS from: {gtfs_source['download']} (This may take a while...)")
     loader = GTFSDataLoader()
-    # Override URL with the JSON's URL
+    
     loader.gtfs_url = gtfs_source['download']
     try:
         gtfs_data = loader.load_gtfs(force_download=False)
@@ -47,10 +47,10 @@ def main():
         sys.exit(1)
 
     print("🏷️ Generating synthetic validation labels (real historical delays require DB integration)...")
-    # Generates synthetic labels since historical delay logs are not stored in GTFS
+    
     y_train = pd.Series(np.random.binomial(n=1, p=0.2, size=X_train.shape[0]))
     
-    # Check shape to ensure compatibility with UI which assumes 9 features
+    
     n_feat = X_train.shape[1]
     
     features_names = [f"feat_{i}" for i in range(n_feat)]

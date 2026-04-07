@@ -242,7 +242,7 @@ class ExperimentTracker:
         cursor = conn.cursor()
 
         try:
-            # Calculate accuracy if possible
+            
             accuracy = None
             if observation.actual is not None and observation.prediction is not None:
                 accuracy = abs(observation.prediction - observation.actual) < 5

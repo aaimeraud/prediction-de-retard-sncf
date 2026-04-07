@@ -4,8 +4,8 @@
 
 - **Projet:** Système de prédiction des retards ferroviaires SNCF en temps réel
 - **Stack:** Python 3.9+ | TensorFlow 2.x | FastAPI | Streamlit | Docker
-- **Status:** v0.7 Production-Ready (219 tests, 100% passing)
-- **Phases:** 7 complétées | 3 nouvelles en cours (Phase 8)
+- **Status:** v0.8 Production-Ready (Modèle connecté aux données réelles GTFS)
+- **Phases:** 7 complétées | Intégration des features SNCF en temps réel finalisée
 
 ## 📊 Architecture Globale
 
@@ -15,14 +15,14 @@
 - **SIRI Real-Time API:** live delays, traffic disruptions
 - **Data Validation:** schema, integrity, quality checks
 
-### 2. Feature Engineering Layer
+### 2. Feature Engineering Layer (Real GTFS Data)
 
-- **Temporal Features:** hour, peak hours, day type
-- **Geographic Features:** latitude, longitude, region
-- **Route Features:** line type, service category
-- **Delay History:** average delays per route
+- **Temporal Features:** hour_of_day, time_of_day_seconds, is_peak_hours
+- **Geographic Features:** stop_lat, stop_lon, is_ile_de_france
+- **Route Features:** route_short_name, service_id
+- **Categorical (One-Hot):** route_type_0 (Tram), route_type_2 (Rail), route_type_3 (Bus)
 
-### 3. ML Model Layer (v0.7)
+### 3. ML Model Layer (v0.8)
 
 - **Binary Classification:** Delay > 5 min vs ≤ 5 min
 - **Architecture:** Dense + BatchNorm + Dropout
@@ -98,11 +98,10 @@ GET  /model/info            # Model metadata
 
 ### Interface Web (Feature 7)
 
-- **Single Predictions:** Form-based input interface
+- **Single Predictions:** Dashboard dynamique câblé sur les 11 features réelles du modèle (GTFS).
 - **Batch Processing:** CSV upload & bulk prediction
-- **Analytics:** Confusion matrix, feature importance
-- **Visualization:** Delay trends, distributions, patterns
-- **System Health:** Real-time API monitoring
+- **Controls:** Sliders, checkboxes, et numerical inputs validant le schéma TensorFlow.
+- **System Health:** Real-time feedback sur l'inférence.
 
 **Tests:** 28 tests (UI mocking, batch processing, API integration)
 
