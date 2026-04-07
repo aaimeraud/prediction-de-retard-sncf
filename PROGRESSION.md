@@ -91,24 +91,41 @@
 - [x] Phase 1-2 complete: Features 1-5 (94 tests)
 - [x] Phase 3 complete: Features 6-7 (46 tests = 18 + 28)
 - [x] Phase 4 - Feature 8: Model Training Pipeline (28 tests)
-- [x] Total tests: 168 passing (all phases: 94 + 18 + 28 + 28)
-- [ ] Tag v0.6 released (Features 1-8)
-- [ ] Merge develop → main (v0.6)
+- [x] **Phase 5 - Feature 9: SIRI Real-Time Collection (27 tests)**
+  - [x] SIRIClient: SNCF SIRI API integration
+  - [x] SIRICache: SQLite persistent cache
+  - [x] SIRICollector: Orchestrator with rate limiting
+  - [x] 27 tests (100% passing)
+  - [x] Commits: d9c999a, f61fa39
+  - [x] Branch: feat/siri-collector
+- [x] **Phase 6 - Feature 10: Model Registry & Versioning (24 tests)**
+  - [x] ModelRegistry: SQLite model storage
+  - [x] SemanticVersion: MAJOR.MINOR.PATCH versioning
+  - [x] VersionMigration: Safe upgrade paths
+  - [x] ExperimentTracker: A/B testing framework
+  - [x] 24 tests (100% passing)
+  - [x] Commits: bb04ec9, d1f8837
+  - [x] Branch: feat/model-versioning
+- [x] **Phase 7 - CI/CD Pipeline**
+  - [x] GitHub Actions: CI workflow (tests, linting, security)
+  - [x] GitHub Actions: CD workflow (build, push, deploy)
+  - [x] Makefile: Development commands
+  - [x] Multi-version testing (Python 3.9, 3.10, 3.11)
+  - [x] Code coverage tracking
+  - [x] Security scanning (bandit, safety)
+  - [x] Commits: b71f35a
+  - [x] Branch: feat/ci-cd-pipeline
+- [x] **Total tests: 219 passing (168 + 27 + 24)**
+- [x] Tag v0.7 ready (Features 1-10 partial)
+- [ ] Merge feat/siri-collector → develop
+- [ ] Merge feat/model-versioning → develop
+- [ ] Merge feat/ci-cd-pipeline → develop
 
-## To-do (Phase 4+ Future)
+## To-do (Phase 5+ Future)
 
-- [ ] Feature 8: Real-time SIRI Collection (3-4 jours)
-  - [ ] SIRI API client for live transit data
-  - [ ] Data transformation pipeline
-  - [ ] PostgreSQL storage (optional)
-- [ ] Feature 9: Model Registry & Versioning (2-3 jours)
-  - [ ] Model versioning system
-  - [ ] A/B testing framework
-  - [ ] Performance tracking
-- [ ] Feature 10: Advanced Analytics (2-3 jours)
-  - [ ] Explainability (SHAP/LIME)
-  - [ ] Root cause analysis
-  - [ ] Trend forecasting
-- [ ] Deployment to Cloud (GCP/AWS)
-- [ ] CI/CD Pipeline (GitHub Actions)
-- [ ] Tests d'acceptation end-to-end
+- [ ] Advanced Analytics (Explainability, Root Cause Analysis)
+- [ ] Kubernetes Deployment
+- [ ] Model Compression & Optimization
+- [ ] Advanced Monitoring (Prometheus/Grafana)
+- [ ] Cost Optimization
+- [ ] Multi-Region Support

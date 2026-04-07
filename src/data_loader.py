@@ -161,3 +161,44 @@ class GTFSDataLoader:
             DataFrame with stop times information or None if not available.
         """
         return gtfs_data.get('stop_times')
+
+    def load_gtfs_from_zip(self, zip_path: str) -> Dict[str, pd.DataFrame]:
+        """
+        Load GTFS data from a local ZIP file path.
+        
+        Args:
+            zip_path: Local path to GTFS ZIP file.
+        
+        Returns:
+            Dictionary of DataFrames for GTFS tables.
+        """
+        return self.parse_gtfs_zip(zip_path)
+
+    def load_gtfs_from_json(self, json_path: str) -> Dict[str, pd.DataFrame]:
+        """
+        Load GTFS-like data from a JSON file.
+        
+        Expected JSON format: dict mapping table names to record lists, e.g.
+        {"stops": [{"stop_id": ..., ...}, ...], "routes": [...], ...}
+        
+        Args:
+            json_path: Path to GTFS-like JSON file.
+        
+        Returns:
+            Dictionary of DataFrames for GTFS tables.
+        """
+        if not os.path.exists(json_path):
+            raise FileNotFoundError(f"JSON file not found: {json_path}")
+
+        try:
+            import json
+            with open(json_path, "r", encoding="utf-8") as f:
+                raw = json.load(f)
+
+            gtfs_data: Dict[str, pd.DataFrame] = {}
+            for key, records in raw.items():
+                if isinstance(records, list):
+                    gtfs_data[key] = pd.DataFrame.from_records(records)
+            return gtfs_data
+        except (json.JSONDecodeError, TypeError) as e:
+            raise ValueError(f"Invalid JSON structure in {json_path}: {str(e)}") from e

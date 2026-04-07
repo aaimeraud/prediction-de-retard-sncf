@@ -197,7 +197,8 @@ class DelayClassifier:
         y_val: Optional[pd.Series] = None,
         epochs: int = 50,
         batch_size: int = 32,
-        early_stopping_patience: int = 5
+        early_stopping_patience: int = 5,
+        verbose: int = 0
     ) -> TrainingHistory:
         """
         Train the model on training data with optional validation.
@@ -239,7 +240,7 @@ class DelayClassifier:
             epochs=epochs,
             batch_size=batch_size,
             callbacks=[early_stop],
-            verbose=0
+            verbose=verbose
         )
         
         best_epoch = int(np.argmin(history.history.get('val_loss', history.history['loss'])))

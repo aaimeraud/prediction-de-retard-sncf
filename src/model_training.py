@@ -142,7 +142,8 @@ class ModelTrainingPipeline:
         y: np.ndarray,
         epochs: int = 20,
         batch_size: int = 32,
-        validation_split: float = 0.2
+        validation_split: float = 0.2,
+        verbose: int = 1
     ) -> Dict:
         """
         Train DelayClassifier on feature matrix and labels.
@@ -157,14 +158,15 @@ class ModelTrainingPipeline:
         Returns:
             Dict: Training history with metrics.
         """
-        print(f"🏋️ Training model ({len(X)} samples, {epochs} epochs)...")
-        
+        if verbose:
+            print(f"🏋️ Training model ({len(X)} samples, {epochs} epochs)...")
+
         history = self.classifier.train(
             X, y,
             epochs=epochs,
             batch_size=batch_size,
-            validation_split=validation_split,
-            verbose=1
+            verbose=verbose,
+            validation_split=validation_split
         )
         
         self.training_history = history.metrics
