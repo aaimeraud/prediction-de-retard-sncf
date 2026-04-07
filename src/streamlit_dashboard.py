@@ -217,6 +217,9 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
         route_type_3 = st.checkbox("Route Type 3 (Bus)", value=False)
     
     if st.button("🚆 Predict Delay", width='stretch'):
+        if 1 <= hour_of_day < 5:
+            st.warning("🌙 Note : Les trains SNCF ne circulent généralement pas entre 1h et 5h du matin. Cette prédiction est théorique.")
+            
         try:
             is_peak = 1 if is_peak_hours else 0
             is_idf = 1 if is_ile_de_france else 0
@@ -246,10 +249,16 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
             features_df = pd.DataFrame(features, columns=features_names)
             
             prediction = classifier.predict(features_df)[0]
-            probability = classifier.predict(features_df, return_probabilities=True).max()
+            probability_array = classifier.predict(features_df, return_probabilities=True)
+            
+            # Extract scalar probability (P(delay))
+            prob_val = float(probability_array[0])
+            
+            # Confidence is P(delay) if predicted delayed, else 1 - P(delay) (for on-time)
+            confidence = prob_val if prediction else (1.0 - prob_val)
             
             st.success(f"Prediction: {'⚠️ Delayed' if prediction else '✅ On-Time'}")
-            st.metric("Confidence", f"{probability:.1%}")
+            st.metric("Confidence", f"{confidence:.1%}")
         except Exception as e:
             st.error(f"⚠️ Prediction error: {str(e)[:100]}")
             st.info("💡 The model failed to predict. Please check your inputs or logs.")
