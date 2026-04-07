@@ -37,7 +37,7 @@ def load_model() -> DelayClassifier:
         DelayClassifier: Model instance for delay predictions.
     """
     try:
-        classifier = DelayClassifier(n_features=9)
+        classifier = DelayClassifier(n_features=14)
         model_path = Path(__file__).parent.parent / "models" / "delay_classifier.keras"
         
         if not model_path.exists():
@@ -45,8 +45,8 @@ def load_model() -> DelayClassifier:
             model_path.parent.mkdir(parents=True, exist_ok=True)
             
             # Using pandas DataFrame/Series as expected by DelayClassifier typings
-            features_names = [f"feat_{i}" for i in range(9)]
-            X_train = pd.DataFrame(np.random.randn(100, 9), columns=features_names)
+            features_names = [f"feat_{i}" for i in range(14)]
+            X_train = pd.DataFrame(np.random.randn(100, 14), columns=features_names)
             y_train = pd.Series(np.random.randint(0, 2, 100))
             
             classifier.train(X_train, y_train, epochs=5, batch_size=16, verbose=0)
@@ -58,7 +58,7 @@ def load_model() -> DelayClassifier:
         return classifier
     except Exception as e:
         st.sidebar.error(f"⚠️ Model load error: {str(e)[:50]}")
-        return DelayClassifier(n_features=9)
+        return DelayClassifier(n_features=14)
 
 
 @st.cache_resource
@@ -86,8 +86,8 @@ def predict_batch(features_df: pd.DataFrame, _classifier: DelayClassifier) -> np
     """
     
     # Ensure columns match expected input if needed
-    features_names = [f"feat_{i}" for i in range(9)]
-    if len(features_df.columns) == 9:
+    features_names = [f"feat_{i}" for i in range(14)]
+    if len(features_df.columns) == 14:
         features_df.columns = features_names
         
     return _classifier.predict(features_df)
@@ -118,7 +118,7 @@ def render_sidebar() -> Dict:
     st.sidebar.markdown("---")
     
     st.sidebar.metric("Model Version", "v1.0")
-    st.sidebar.metric("Features", "9")
+    st.sidebar.metric("Features", "14")
     st.sidebar.metric("Training Date", "2026-03-31")
     
     # System health widget is hidden for Streamlit Cloud
@@ -221,10 +221,10 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
                 vehicle_type,
                 avg_delay,
                 weather_impact,
-                0.5
+                0.5, 0, 0, 0, 0, 0
             ]).reshape(1, -1)
             
-            features_names = [f"feat_{i}" for i in range(9)]
+            features_names = [f"feat_{i}" for i in range(14)]
             features_df = pd.DataFrame(features, columns=features_names)
             
             prediction = classifier.predict(features_df)[0]
