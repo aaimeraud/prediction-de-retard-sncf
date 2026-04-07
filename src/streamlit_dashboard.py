@@ -121,17 +121,9 @@ def render_sidebar() -> Dict:
     st.sidebar.metric("Features", "9")
     st.sidebar.metric("Training Date", "2026-03-31")
     
-    st.sidebar.markdown("---")
-    st.sidebar.title("🏥 System Health")
+    # System health widget is hidden for Streamlit Cloud
     
-    health = get_api_health()
-    status_color = "🟢" if health["status"] else "🔴"
-    status_text = "Healthy" if health["status"] else "Offline"
-    
-    st.sidebar.write(f"API Status: {status_color} {status_text}")
-    st.sidebar.caption(f"Last check: {health['timestamp'].strftime('%H:%M:%S')}")
-    
-    return {"health": health}
+    return {}
 
 
 def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: FeatureEngineer):
