@@ -84,7 +84,13 @@ def predict_batch(features_df: pd.DataFrame, _classifier: DelayClassifier) -> np
     Returns:
         np.ndarray: Predicted delay classes (0 or 1).
     """
-    return _classifier.predict(features_df.values)
+    
+    # Ensure columns match expected input if needed
+    features_names = [f"feat_{i}" for i in range(9)]
+    if len(features_df.columns) == 9:
+        features_df.columns = features_names
+        
+    return _classifier.predict(features_df)
 
 
 def get_api_health() -> Dict[str, bool]:
@@ -226,8 +232,11 @@ def render_single_prediction_tab(classifier: DelayClassifier, feature_eng: Featu
                 0.5
             ]).reshape(1, -1)
             
-            prediction = classifier.predict(features)[0]
-            probability = classifier.predict_proba(features).max()
+            features_names = [f"feat_{i}" for i in range(9)]
+            features_df = pd.DataFrame(features, columns=features_names)
+            
+            prediction = classifier.predict(features_df)[0]
+            probability = classifier.predict(features_df, return_probabilities=True).max()
             
             st.success(f"Prediction: {'⚠️ Delayed' if prediction else '✅ On-Time'}")
             st.metric("Confidence", f"{probability:.1%}")
