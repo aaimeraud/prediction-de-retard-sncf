@@ -9,6 +9,7 @@
 ## 2. Déploiement Git et Worktrees
 
 ### 2.1 Conventions de Nommage
+
 - **Feature :** `feat/<nom>`
 - **Hotfix :** `hotfix/<nom>`
 - **Documentation :** `docs/<nom>`
@@ -17,6 +18,7 @@
 - **Maintenance :** `chore/<nom>`
 
 ### 2.2 Workflow Explicite : Branche → Worktree
+
 **Toujours créer la branche AVANT le worktree (protocole strict) :**
 
 ```bash
@@ -28,17 +30,20 @@ cd ./worktrees/feat-my-feature
 ```
 
 **Pourquoi deux étapes ?**
+
 - Branche explicite : visible dans `git branch -a`
 - Worktree isolé : développement independant, pas de conflicts
 - Traçabilité : historique Git conserve les branches créées
 
 ### 2.3 Isolation et Environnement
+
 - Ne travaillez **jamais** sur `develop` ou `main` directement
 - Chaque feature = 1 branche + 1 worktree = 1 environnement isolé
 - **Dossier de destination worktrees :** `./worktrees/`
 - Cela permet un isolement robuste des environnements et de l'implémentation.
 
 ### 2.4 Merge et Cleanup
+
 Après merge vers `develop` :
 
 ```bash
