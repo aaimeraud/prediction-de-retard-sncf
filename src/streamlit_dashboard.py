@@ -37,7 +37,7 @@ def load_model() -> DelayClassifier:
         DelayClassifier: Model instance for delay predictions.
     """
     try:
-        classifier = DelayClassifier(n_features=14)
+        classifier = DelayClassifier(n_features=11)
         model_path = Path(__file__).parent.parent / "models" / "delay_classifier.keras"
         
         if not model_path.exists():
@@ -45,8 +45,8 @@ def load_model() -> DelayClassifier:
             model_path.parent.mkdir(parents=True, exist_ok=True)
             
             
-            features_names = [f"feat_{i}" for i in range(14)]
-            X_train = pd.DataFrame(np.random.randn(100, 14), columns=features_names)
+            features_names = ['hour_of_day', 'time_of_day_seconds', 'service_id', 'is_peak_hours', 'route_short_name', 'route_type_0', 'route_type_2', 'route_type_3', 'stop_lat', 'stop_lon', 'is_ile_de_france']
+            X_train = pd.DataFrame(np.random.randn(100, 11), columns=features_names)
             y_train = pd.Series(np.random.randint(0, 2, 100))
             
             classifier.train(X_train, y_train, epochs=5, batch_size=16, verbose=0)
@@ -58,7 +58,7 @@ def load_model() -> DelayClassifier:
         return classifier
     except Exception as e:
         st.sidebar.error(f"⚠️ Model load error: {str(e)[:50]}")
-        return DelayClassifier(n_features=14)
+        return DelayClassifier(n_features=11)
 
 
 @st.cache_resource
@@ -86,8 +86,8 @@ def predict_batch(features_df: pd.DataFrame, _classifier: DelayClassifier) -> np
     """
     
     
-    features_names = [f"feat_{i}" for i in range(14)]
-    if len(features_df.columns) == 14:
+    features_names = ['hour_of_day', 'time_of_day_seconds', 'service_id', 'is_peak_hours', 'route_short_name', 'route_type_0', 'route_type_2', 'route_type_3', 'stop_lat', 'stop_lon', 'is_ile_de_france']
+    if len(features_df.columns) == 11:
         features_df.columns = features_names
         
     return _classifier.predict(features_df)
@@ -118,7 +118,7 @@ def render_sidebar() -> Dict:
     st.sidebar.markdown("---")
     
     st.sidebar.metric("Model Version", "v1.0")
-    st.sidebar.metric("Features", "14")
+    st.sidebar.metric("Features", "11")
     st.sidebar.metric("Training Date", "2026-03-31")
     
     
