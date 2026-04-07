@@ -7,6 +7,7 @@ Creates a minimal trained model that can be loaded by the dashboard.
 import sys
 from pathlib import Path
 import numpy as np
+import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
@@ -25,8 +26,9 @@ def train_minimal_model():
     
     classifier = DelayClassifier(n_features=9)
     
-    X_train = np.random.randn(100, 9)
-    y_train = np.random.randint(0, 2, 100)
+    features_names = [f"feat_{i}" for i in range(9)]
+    X_train = pd.DataFrame(np.random.randn(100, 9), columns=features_names)
+    y_train = pd.Series(np.random.randint(0, 2, 100))
     
     print("Training on 100 synthetic samples...")
     history = classifier.train(
@@ -34,7 +36,6 @@ def train_minimal_model():
         y_train, 
         epochs=5, 
         batch_size=16, 
-        validation_split=0.2,
         verbose=0
     )
     

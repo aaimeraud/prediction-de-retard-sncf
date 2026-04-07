@@ -43,9 +43,13 @@ def load_model() -> DelayClassifier:
         if not model_path.exists():
             st.sidebar.info("ℹ️ Training initial machine learning model (generating weights)...")
             model_path.parent.mkdir(parents=True, exist_ok=True)
-            X_train = np.random.randn(100, 9)
-            y_train = np.random.randint(0, 2, 100)
-            classifier.train(X_train, y_train, epochs=5, batch_size=16, validation_split=0.2, verbose=0)
+            
+            # Using pandas DataFrame/Series as expected by DelayClassifier typings
+            features_names = [f"feat_{i}" for i in range(9)]
+            X_train = pd.DataFrame(np.random.randn(100, 9), columns=features_names)
+            y_train = pd.Series(np.random.randint(0, 2, 100))
+            
+            classifier.train(X_train, y_train, epochs=5, batch_size=16, verbose=0)
             classifier.save_model(str(model_path))
             
         classifier.load_model(str(model_path))
