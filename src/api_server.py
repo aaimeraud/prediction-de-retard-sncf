@@ -403,6 +403,24 @@ class PredictionAPI:
             logger.error(f"Failed to load model: {str(e)}")
             self.model_loaded = False
 
+if __name__ == "__main__":
+    import uvicorn
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run the SNCF Delay Prediction API")
+    parser.add_argument("--model", type=str, default="models/delay_classifier", help="Path to trained model")
+    parser.add_argument("--host", type=str, default="0.0.0.0", help="Host address")
+    parser.add_argument("--port", type=int, default=8000, help="Port number")
+    
+    args = parser.parse_args()
+    
+    api = PredictionAPI(model_path=args.model)
+    uvicorn.run(api.app, host=args.host, port=args.port)
+            logger.info(f"Model loaded successfully from {model_path}")
+        except Exception as e:
+            logger.error(f"Failed to load model: {str(e)}")
+            self.model_loaded = False
+
     def get_app(self) -> FastAPI:
         """
         Get FastAPI application instance.
